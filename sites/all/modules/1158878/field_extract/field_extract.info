@@ -1,0 +1,13 @@
+; $Id$
+
+name = Field extract
+description = Extension of the Field API to allow proper extraction of field values from entities
+package = Fields
+core = 7.x
+
+; Information added by drupal.org packaging script on 2012-01-21
+version = "7.x-1.0"
+core = "7.x"
+project = "1158878"
+datestamp = "1327170337"
+

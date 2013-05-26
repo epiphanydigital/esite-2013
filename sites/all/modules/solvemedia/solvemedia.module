@@ -1,0 +1,215 @@
+<?php
+/**
+ * @file
+ * Uses the Solve Media captcha replacement widget to secure and monetize your Drupal site.
+ */
+
+/**
+* Implementation of hook_help().
+*/
+function solvemedia_help($section = '') {
+  $output = '';
+  switch ($section) {
+    case 'admin/modules#name':
+      $output .= t('Solve Media');
+      break;
+    case 'admin/modules#description':
+    case 'admin/user/captcha/solvemedia':
+      $output .= t('Uses the <a href="@url" target="_blank">Solve Media</a> captcha replacement widget to secure and monetize your Drupal site.', array('@url' => url('http://www.solvemedia.com')));
+      break;
+    case 'admin/help#solvemedia':
+      $output .= '<p>'.
+        t('Uses the Solve Media captcha replacement widget to secure and monetize your Drupal site. For more information on Solve Media, visit <a href="@url" target="_blank">the official website</a>.', array('@url' => url('http://www.solvemedia.com'))) .
+        '</p><h3>'.
+        t('Configuration') .
+        '</h3><p>'.
+        t('The settings associated with Solve Media can be found in the <a href="@solvemediatab">Solve Media tab</a>, in the <a href="@captchasettings">CAPTCHA settings</a>. You must set your Solve Media public, private, and hash keys in order to use the module. Once the public, private, and hash keys are set, visit the <a href="@captchasettings">CAPTCHA settings</a>, where you can choose where to display the Solve Media widget.', array('@solvemediatab' => url('admin/config/people/captcha/solvemedia'), '@captchasettings' => url('admin/config/people/captcha'))) .
+        '</p>';
+      break;
+  }
+  return $output;
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function solvemedia_menu() {
+  $items = array();
+  $items['admin/config/people/captcha/solvemedia'] = array(
+    'title' => 'Solve Media',
+    'description' => 'Administer the Solve Media web service.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('solvemedia_admin_settings'),
+    'access arguments' => array('administer Solve Media settings'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'solvemedia.admin.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implementation of hook_perm().
+ */
+function solvemedia_permission() {
+   return array('administer Solve Media settings' => array(
+      'title' => t('Administer Solve Media settings'),
+      ),
+   );
+}
+
+/**
+ * Implementation of hook_captcha().
+ */
+function solvemedia_captcha() {
+  $args = func_get_args();
+  $op = array_shift($args); 
+  switch ($op) {
+    case 'list':
+      return array('Solve Media');
+
+    case 'generate':
+      $captcha_type = array_shift($args);
+      $captcha = array();
+      if ($captcha_type == 'Solve Media') {
+        // Load the solvemedia library.
+        _adcopy_load_library();
+
+        // Retrieve configuration variables from database.
+        $adcopy_secure_connection = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on');
+        $adcopy_theme = variable_get('adcopy_theme', 'white');
+        $adcopy_tabindex = variable_get('adcopy_tabindex', NULL);
+        $adcopy_public_key = variable_get('adcopy_public_key', '');
+        $adcopy_lang = variable_get('adcopy_lang', 'en');
+        $adcopy_form_value = NULL;
+        $adcopy_show_on_comment_focus = variable_get('adcopy_show_on_comment_focus', FALSE);
+        
+        // Construct the Javascript, but only display it once.
+        static $_adcopy_jsadded = FALSE;
+        if ($_adcopy_jsadded == FALSE) {
+          $_adcopy_jsadded = TRUE;
+          $adcopy_options = array(
+            'theme' => $adcopy_theme,
+            'lang' => $adcopy_lang,
+          );
+
+          // Set the default tab index.
+          if (!empty($adcopy_tabindex)) {
+            $adcopy_options['tabindex'] = $adcopy_tabindex;
+          }
+          drupal_add_js('var ACPuzzleOptions = '. drupal_json_encode($adcopy_options) .';', 'inline');
+        }
+
+        // Create the form. Captcha requires TRUE to be returned in solution.
+        $captcha['solution'] = TRUE;
+        $captcha['captcha_validate'] = 'solvemedia_captcha_validation';
+        if ($adcopy_show_on_comment_focus){
+          $modified_code = _modified_widget_code($adcopy_public_key, $adcopy_secure_connection);
+          $html = $modified_code["html"];
+          drupal_add_js($modified_code["js"], 'inline');
+        } else {
+          $html = solvemedia_get_html($adcopy_public_key, NULL, $adcopy_secure_connection);          
+        }
+        $captcha['form']['captcha_response'] = array(
+          '#type' => 'hidden',
+          '#value' => 'Solve Media',
+        );
+        $captcha['form']['captcha_form'] = array(
+          '#type' => 'item',
+          '#markup' => $html,
+        );
+      }
+      return $captcha;
+  }
+}
+
+/**
+ * CAPTCHA Callback; Validates the Solve Media code.
+ */
+function solvemedia_captcha_validation($solution = NULL, $response = NULL) {
+  if ($response == 'Solve Media' && isset($_POST['adcopy_challenge']) && isset($_POST['adcopy_response'])) {
+    $resp = solvemedia_check_answer(
+      variable_get('adcopy_private_key', ''),
+      $_SERVER['REMOTE_ADDR'],
+      $_POST['adcopy_challenge'],
+      $_POST['adcopy_response'],
+      variable_get('adcopy_hash_key','')
+    );
+    if ($resp->is_valid) {
+      return TRUE;
+    } else {
+      form_set_error('captcha_response', t('The Solve Media response you entered was incorrect.'));
+      return FALSE;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Implementation of hook_theme().
+ * 
+function solvemedia_theme() {
+  return array(
+    'solvemedia_custom_widget' => array(
+      'arguments' => array(),
+    ),
+  );
+}*
+
+/**
+ * Load the solvemedia library.
+ */
+function _adcopy_load_library() {
+  module_load_include('php', 'solvemedia', 'solvemedia/solvemedialib');
+}
+
+function _modified_widget_code($pubkey, $secure) {
+  $server = $secure ? ADCOPY_API_SECURE_SERVER : ADCOPY_API_SERVER;
+  $html = '<div id="solvemedia_container"></div>';
+  $html .= <<<NOSCRIPT
+<noscript>
+  <iframe src="{$server}/papi/challenge.noscript?k={$pubkey}" height="300" width="500" frameborder="0"></iframe><br/>
+  <textarea name="adcopy_challenge" rows="3" cols="40"></textarea>
+  <input type="hidden" name="adcopy_response" value="manual_challenge"/>
+</noscript>
+NOSCRIPT;
+  $js = <<<JAVASCRIPT
+var show_puzzle = 0;
+function create_widget(click) {
+  comment_box = get_comment_box();
+  if (typeof(ACPuzzle) != 'undefined' && (click || show_puzzle)){
+    ACPuzzle.create('{$pubkey}', 'solvemedia_container', ACPuzzleOptions);
+    if (comment_box) {
+      comment_box.unbind('focus');
+    }
+  } else if (click) {
+    comment_box.unbind('focus');
+    show_puzzle = 1;
+  }
+}
+
+function set_on_focus() {
+  comment_box = get_comment_box();
+  if (comment_box && !(comment_box[0].value || (document.activeElement == comment_box[0]))) {
+    comment_box.bind('focus', function(){create_widget(1)});
+  } else {
+    show_puzzle = 1;
+  }
+  ACPuzzleOptions.onload = create_widget;
+  ajax = document.createElement('script');
+  ajax.type = "text/javascript";
+  ajax.src = "{$server}/papi/challenge.ajax";
+  document.getElementsByTagName('head')[0].appendChild(ajax);
+}
+
+function get_comment_box() {
+  e = jQuery('textarea[name*="comment"]');
+  if (e.length) {
+    return e;
+  }
+  return undefined;
+}
+
+jQuery(document).ready(set_on_focus);
+JAVASCRIPT;
+  return array("html" => $html, "js" => $js);
+}

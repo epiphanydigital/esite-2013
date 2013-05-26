@@ -1,0 +1,127 @@
+/* This file will hold styles for the mobile version of your website (mobile first). */
+/* This also can include ANY global CSS that applies site-wide. Unless overwritten by a more specific style rule, CSS declarations in global.css will apply site-wide. */
+
+@import url(http://fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic,700italic);
+@import url(http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300);
+
+
+html {
+    background:url('../img/pattern.png') fixed;
+    padding:0;
+    margin:0;
+}
+
+body {
+    height:100%;
+    background: fixed rgba(0,0,0,0); /* Old browsers */
+    background: fixed -moz-radial-gradient(center, ellipse cover,  rgba(0,0,0,0) 0%, rgba(0,0,0,0.5) 100%); /* FF3.6+ */
+    background: fixed -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(0,0,0,0)), color-stop(100%,rgba(0,0,0,0.5))); /* Chrome,Safari4+ */
+    background: fixed -webkit-radial-gradient(center, ellipse cover,  rgba(0,0,0,0) 0%,rgba(0,0,0,0.5) 100%); /* Chrome10+,Safari5.1+ */
+    background: fixed -o-radial-gradient(center, ellipse cover,  rgba(0,0,0,0) 0%,rgba(0,0,0,0.5) 100%); /* Opera 12+ */
+    background: fixed -ms-radial-gradient(center, ellipse cover,  rgba(0,0,0,0) 0%,rgba(0,0,0,0.5) 100%); /* IE10+ */
+    background: fixed radial-gradient(ellipse at center,  rgba(0,0,0,0) 0%,rgba(0,0,0,0.5) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=rgba(0,0,0,0), endColorstr='rgba(0,0,0,0.5)',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+    font-family: 'Noto Sans', sans-serif;
+    color:#555;
+}
+
+#page a {color:#E00}
+
+h1,h2,h3,h4,h5,h6 {
+    font-weight:400;
+    font-family: 'Open Sans Condensed', sans-serif;
+    color:#000;
+}
+h1#page-title {
+    margin:0 0 0 5px;
+    color:#FEFEFE;
+    font-size:22px;
+    text-shadow: 0px 2px 5px rgba(0,0,0,0.5);
+}
+h1 {font-size:32px}
+h2 {font-size:26px}
+h3 {font-size:22px}
+h4 {font-size:18px}
+h5 {font-size:16px}
+h6 {font-size:14px}
+
+.form-text {margin-bottom:5px}
+
+#zone-header-wrapper .block,
+#zone-preface-wrapper .block,
+#zone-content-wrapper .block,
+#zone-postscript-wrapper .block {
+    background:#FFF;
+    margin:0 0 20px;
+    border:1px solid #999;
+    -webkit-box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow:    0px 5px 20px rgba(0, 0, 0, 0.75);
+    box-shadow:         0px 5px 20px rgba(0, 0, 0, 0.75);
+}
+#zone-header-wrapper .block-inner,
+#zone-preface-wrapper .block-inner,
+#zone-content-wrapper .block-inner,
+#zone-postscript-wrapper .block-inner {
+    margin:20px 20px 10px;
+}
+div.logo-img {
+    height:58px;
+    overflow:hidden;
+}
+div.logo-img a {
+    display:block;
+    height:58px;
+    width:506px;
+    position:relative;
+}
+div.logo-img a.default {
+    background:url('../img/logo-default.png') no-repeat 0 0;
+}
+div.logo-img a#logo-hover,
+div.logo-img a#logo-hover.hover {
+    background:url('../img/logo-hover.png') no-repeat 0 0;
+    top:-58px;
+    left:-506px;
+    opacity:0;
+}
+div.logo-img a#logo-hover.hover:hover {
+    opacity:1;
+}
+
+#region-menu .block-superfish {
+    background:#000;
+    color:#FFF;
+    margin-bottom:20px;
+}
+#region-menu ul {
+    background:#000;
+    padding:3px 0;
+    margin-left:10px;
+}
+#region-menu ul,
+#region-menu li {
+    padding:0;
+}
+#region-menu ul ul {
+    padding:5px 0;
+}
+#region-menu li a {
+    line-height:20px;
+    background:#000;
+    color:#FEFEFE;
+    text-decoration:none;
+    display:inline-block;
+    padding:3px 10px;
+}
+#region-menu li a:hover {
+    color:#E00;
+}
+
+.view-tweets ul li {
+    margin:5px 0 0;
+    padding:0 0 5px;
+    border-bottom:1px dotted #CCC;
+}
+.view-tweets ul li.views-row-last {
+    border:none;
+}

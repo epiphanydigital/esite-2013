@@ -1,1 +1,9 @@
 /* This file will hold styles that are loaded using the same media query as the wide grid. */
+
+#block-block-1 .block-inner {
+    height:347px;
+}
+.view-display-id-page_1 {
+    margin-top:50px;
+    margin-left:30px;
+}

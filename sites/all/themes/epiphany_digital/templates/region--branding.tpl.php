@@ -7,6 +7,9 @@
         <a class="default" href="<?php print base_path(); ?>"></a>
         <a id="logo-hover" class="hover" href="<?php print base_path(); ?>"></a>
       </div>
+      <div class="logo-mobile">
+        <a class="default" href="<?php print base_path(); ?>"></a>
+      </div>
       <?php endif; ?>
       <?php if ($site_name || $site_slogan): ?>
       <?php $class = $site_name_hidden && $site_slogan_hidden ? ' element-invisible' : ''; ?>

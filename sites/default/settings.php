@@ -215,9 +215,9 @@ $databases = array (
   array (
     'default' => 
     array (
-      'database' => 'e',
-      'username' => 'root',
-      'password' => 'pass',
+      'database' => 'edigital_com_2013',
+      'username' => 'edigital_me',
+      'password' => '2dva5Nnc8Fr2',
       'host' => 'localhost',
       'port' => '',
       'driver' => 'mysql',
@@ -279,7 +279,7 @@ $drupal_hash_salt = 'yDc8WVntr-eEssKKT0rrDCqDeUTI-5XEremCNlAHH6U';
  * for you.
  */
 # $base_url = 'http://www.example.com';  // NO trailing slash!
-
+$base_url = 'http://www.epiphanydigital.com';
 /**
  * PHP settings:
  *
@@ -336,6 +336,7 @@ ini_set('session.cookie_lifetime', 2000000);
  * with a leading dot, as per RFC 2109.
  */
 # $cookie_domain = '.example.com';
+$cookie_domain = 'www.epiphanydigital.com';
 
 /**
  * Variable overrides:

@@ -2,3 +2,30 @@
 /* If you are using the default media queries provided by Omega, these styles will also
  *  apply to the normal and widescreen layouts. You may override these styles in the normal 
  *  and widescreen CSS files as appropriate. */
+
+
+div.logo-img {
+    margin:60px 0 20px;
+    width:506px;
+}
+div.logo-mobile {
+    display:none;
+}
+
+#region-sidebar-second {padding-top:33px}
+
+.view-display-id-page_1 .views-row {
+    float:left;
+    margin:0 20px 20px 0;
+}
+.view-display-id-page_1 {
+    margin-top:50px;
+    margin-left:40px;
+}
+
+.views-field-colorbox .field-content img {
+    margin:0;
+    width:auto;
+    height:auto;
+    float:none;
+}
